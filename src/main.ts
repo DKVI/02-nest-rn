@@ -6,7 +6,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
-
+  app.setGlobalPrefix('api/v1');
+  app.useGlobalPipes(
+    new (require('@nestjs/common').ValidationPipe)({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
   await app.listen(port);
 }
 bootstrap();
