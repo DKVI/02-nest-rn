@@ -5,39 +5,38 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema({ timestamps: true })
 export class User {
-    @Prop()
-    name: string;
+  @Prop()
+  name: string;
 
-    @Prop()
-    email: string;
+  @Prop()
+  email: string;
 
-    @Prop()
-    password: string;
+  @Prop()
+  password: string;
 
-    @Prop()
-    phone: string;
+  @Prop()
+  phone: string;
 
-    @Prop()
-    address: string;
+  @Prop()
+  address: string;
 
-    @Prop()
-    image: string;
+  @Prop()
+  image: string;
 
-    @Prop()
-    role: string;
+  @Prop({ default: 'USER' })
+  role: string;
 
-    @Prop()
-    accountType: string;
+  @Prop({ default: 'LOCAL' })
+  accountType: string;
 
-    @Prop()
-    isActive: string;
+  @Prop()
+  isActive: boolean;
 
-    @Prop()
-    codeId: string;
+  @Prop({ default: null })
+  codeId: string;
 
-    @Prop()
-    codeExpired: Date;
-
+  @Prop({ default: null })
+  codeExpired: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
