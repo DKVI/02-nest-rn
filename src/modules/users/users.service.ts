@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { hashPasswordHelper } from '@/helpers/util';
 import aqp from 'api-query-params';
 import { skip } from 'node:test';
@@ -57,11 +57,26 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(updateUserDto: UpdateUserDto) {
+    await this.userModel.updateOne(
+      { _id: updateUserDto._id },
+      { ...updateUserDto },
+    );
+    return `This action updates a #${updateUserDto._id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findByEmail(email: string) {
+    return this.userModel.findOne({ email });
+  }
+
+  async remove(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid user ID format');
+    }
+    const results = await this.userModel.findById(id);
+    if (!results) {
+      throw new BadRequestException('User not found');
+    }
+    return this.userModel.deleteOne({ _id: id });
   }
 }
